@@ -1,27 +1,50 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import { VLayout } from '../views/layout/index'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+const constantRouterMap = [
+    // {
+    //     path: '*',
+    //     redirect: '/404',
+    //     component: () => import('@/views/system/404'),
+    //     hidden: true,
+    // },
+    {
+        path: "",
+        component: VLayout,
+        redirect: 'dynamic',
+        children: [{
+            path: 'dynamic',
+            name: 'dynamic',
+            component: () => import('@/views/ncov/Dynamic'),
+            hidden: false,
+            meta: {
+                title: "疫情动态"
+            }
+        }]
+    },
+    {
+        path: "/simulation",
+        component: VLayout,
+        redirect: 'simulation',
+        children: [{
+            path: 'simulation',
+            name: 'simulation',
+            component: () => import('@/views/ncov/Simulation'),
+            hidden: false,
+            meta: {
+                title: "疫情模拟"
+            }
+        }]
+    }
 ]
 
 const router = new VueRouter({
-  routes
+    scrollBehavior: () => ({y: 0}),
+    routes: constantRouterMap
 })
 
+export {constantRouterMap}
 export default router

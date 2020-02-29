@@ -1,0 +1,103 @@
+body{
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html{
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after{
+  box-sizing: inherit;
+}
+
+.ivu-spin-fix{
+  background-color: rgba(75, 75, 75, 0.8) !important;
+}
+
+.loading-spin-animate{
+  animation: ani-demo-spin 1s linear infinite;
+}
+#app{
+  height: 100%;
+  .ivu-layout{
+    height: 100%;
+    background: #ffffff;
+    .ivu-affix{
+      z-index: 100;
+    }
+    .ivu-layout-header{
+      background: transparent;
+      border-bottom: 1px solid #ebebeb;
+      padding: 0 25px;
+      min-width: 1200px;
+      height: 110px;
+      position: relative;
+      z-index: 2;
+      .layout-header-content{
+        .herder-title{
+          height: 60px;
+          box-sizing: border-box;
+          background-color: transparent;
+          color: #ffffff;
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-end;
+          .main-title{
+            font-size: 30px;
+            height: 35px;
+            line-height: 35px;
+            margin-right: 10px;
+          }
+          .pre-title{
+            font-size: 14px;
+            line-height: 19px;
+            height: 19px;
+          }
+        }
+        .ivu-menu{
+          height: 50px;
+          display: flex;
+          justify-content: flex-start;
+          border-bottom: 1px solid #ebebeb;
+        }
+      }
+      .layout-nav{
+        display: inline-block;
+        width: 500px;
+        margin-left: 20px;
+        height: 45px;
+        float: left;
+      }
+      .ivu-select{
+        float: right;
+        margin-top: 10px;
+      }
+      .ivu-menu-horizontal.ivu-menu-light:after{
+        background: none;
+      }
+    }
+    .ivu-layout-content, editor-body-content{
+      -webkit-box-flex: 1;
+      -moz-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 0;
+      min-width: 1200px;
+    }
+    .ivu-layout-content .main-container {
+      height: 100%;
+    }
+    .ivu-divider-horizontal{
+      background-color: #dddddd;
+    }
+  }
+}
