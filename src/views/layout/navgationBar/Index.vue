@@ -1,5 +1,5 @@
 <template>
-    <Menu mode="horizontal" theme="light" :active-name="active" class="layout-nav">
+    <Menu mode="horizontal" theme="light" :active-name="currentTab" class="layout-nav" @on-select="selectTab">
         <NavItem :routes="routers"></NavItem>
     </Menu>
 </template>
@@ -19,11 +19,16 @@
         },
         computed: {
             ...mapGetters([
-                'routers'
+                'routers', "currentTab"
             ])
         },
         mounted(){
-            this.active = "1"
+
+        },
+        methods: {
+            selectTab(name){
+                this.$store.dispatch("changeTab", name)
+            }
         }
     }
 </script>

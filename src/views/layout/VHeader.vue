@@ -7,7 +7,7 @@
 
         <NavigationBar></NavigationBar>
 
-        <Select v-if="provinces.length>0" v-model="currentProvince" style="width:100px" @on-change="changeProvince">
+        <Select v-if="provinces.length>0 && currentTab==1" v-model="currentProvince" style="width:100px" @on-change="changeProvince">
             <Option v-for="item in provinces" :value="item" :key="item">{{ item }}</Option>
         </Select>
     </div>
@@ -15,6 +15,7 @@
 
 <script>
     import NavigationBar from './navgationBar/Index'
+    import {mapGetters} from "vuex";
     export default {
         name: "v-header",
         components: {
@@ -26,21 +27,33 @@
                 provinces: []
             }
         },
+        computed: {
+            ...mapGetters([
+                'routers', "currentTab"
+            ])
+        },
         mounted(){
             this.getBaseData();
             this.$store.dispatch("changeProvince", "湖北省").then(res=>{
                 this.currentProvince = "湖北省"
             });
+
+
+            if(this.$route.name == "simulation"){
+                this.$store.dispatch("changeTab", "1")
+            }
         },
         methods: {
             getBaseData(){
-                this.$http.get(this.$apis.baseHost + this.$apis.getBaseParamColection)
+                this.$http.get(this.$apis.baseHost + this.$apis.getBaseParamColection,{timestamp: Math.random()})
                     .then(res => {
                         if(res.data.code == 1){
                             let data = res.data.data;
                             this.provinces = data.provinceData;
+
+                            this.$store.dispatch("initSummaryData", data.summaryData)
+                            this.$store.dispatch("initEmergencyData", data.emergencyData)
                         }
-                        console.log(res);
                     })
             },
             changeProvince(value){

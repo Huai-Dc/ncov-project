@@ -1,6 +1,47 @@
 <template>
     <div class="dynamic-content">
         <div class="update-date">更新至 {{updateDate}} 全国数据统计</div>
+        <div class="ncov-info-panel" v-if="summaryData">
+            <div class="panel-item">
+                <span class="float-data">较昨日<span style="color: rgb(247, 76, 49)">{{summaryData.currentConfirmedIncr}}</span></span>
+                <span class="main-count" style="color: rgb(247, 76, 49)">{{summaryData.currentConfirmedCount}}</span>
+                <span class="count-title">现存确诊</span>
+            </div>
+            <!--<div class="panel-item">-->
+                <!--<span class="float-data">较昨日<span style="color: rgb(247, 130, 7)">-2564</span></span>-->
+                <!--<span class="main-count" style="color: rgb(247, 130, 7)">{{summaryData.suspectedCount}}</span>-->
+                <!--<span class="count-title">现存疑似</span>-->
+            <!--</div>-->
+            <!--<div class="panel-item">-->
+                <!--<span class="float-data">较昨日<span style="color: rgb(162, 90, 78)">-2564</span></span>-->
+                <!--<span class="main-count" style="color: rgb(162, 90, 78)">37393</span>-->
+                <!--<span class="count-title">现存重症</span>-->
+            <!--</div>-->
+            <div class="panel-item">
+                <span class="float-data">较昨日<span style="color: rgb(174, 33, 44)">{{summaryData.confirmedIncr}}</span></span>
+                <span class="main-count" style="color: rgb(174, 33, 44)">{{summaryData.confirmedCount}}</span>
+                <span class="count-title">累计确诊</span>
+            </div>
+            <div class="panel-item">
+                <span class="float-data">较昨日<span style="color: rgb(93, 112, 146)">{{summaryData.deadIncr}}</span></span>
+                <span class="main-count" style="color: rgb(93, 112, 146)">{{summaryData.deadCount}}</span>
+                <span class="count-title">累计死亡</span>
+            </div>
+            <div class="panel-item">
+                <span class="float-data">较昨日<span style="color: rgb(40, 183, 163)">{{summaryData.curedIncr}}</span></span>
+                <span class="main-count" style="color: rgb(40, 183, 163)">{{summaryData.curedCount}}</span>
+                <span class="count-title">累计治愈</span>
+            </div>
+
+            <!--<Poptip word-wrap width="200" content="数据说明">-->
+                <!--<Button>Long Content</Button>-->
+            <!--</Poptip>-->
+        </div>
+        <div class="button-group">
+            <div @click="changeTab('confirmedCount')" :class="{active:currentActive == 'confirmedCount'}">累计确诊</div>
+            <div @click="changeTab('currentConfirmedCount')" :class="{active:currentActive == 'currentConfirmedCount'}">现有确诊</div>
+            <!--<div @click="changeTab('currentConfirmedIncr')" :class="{active:currentActive == 'currentConfirmedIncr'}">每日确诊</div>-->
+        </div>
         <div class="map-canvas" ref="chartCanvas">
         </div>
     </div>
@@ -10,160 +51,67 @@
     import {formatTimeToStr} from "../../utils/date";
     import * as ECharts from "echarts";
     import '../../assets/mapGeo/china'
+    import {mapGetters} from "vuex";
 
     export default {
         name: "dynamic",
         data() {
             return {
                 updateDate: '',
-                ncovData: [{
-                    name: "南海诸岛",
-                    value: 0
-                },
-                    {
-                        name: '北京',
-                        value: 132
-                    },
-                    {
-                        name: '天津',
-                        value: 28
-                    },
-                    {
-                        name: '上海',
-                        value: 47
-                    },
-                    {
-                        name: '重庆',
-                        value: 148
-                    },
-                    {
-                        name: '河北',
-                        value: 31
-                    },
-                    {
-                        name: '河南',
-                        value: 89
-                    },
-                    {
-                        name: '云南',
-                        value: 15
-                    },
-                    {
-                        name: '辽宁',
-                        value: 25
-                    },
-                    {
-                        name: '黑龙江',
-                        value: 168
-                    },
-                    {
-                        name: '湖南',
-                        value: 171
-                    },
-                    {
-                        name: '安徽',
-                        value: 116
-                    },
-                    {
-                        name: '山东',
-                        value: 333
-                    },
-                    {
-                        name: '新疆',
-                        value: 21
-                    },
-                    {
-                        name: '江苏',
-                        value: 108
-                    },
-                    {
-                        name: '浙江',
-                        value: 215
-                    },
-                    {
-                        name: '江西',
-                        value: 123
-                    },
-                    {
-                        name: '湖北',
-                        value: 34681
-                    },
-                    {
-                        name: '广西',
-                        value: 78
-                    },
-                    {
-                        name: '甘肃',
-                        value: 7
-                    },
-                    {
-                        name: '山西',
-                        value: 20
-                    },
-                    {
-                        name: '内蒙古',
-                        value: 27
-                    },
-                    {
-                        name: '陕西',
-                        value: 39
-                    },
-                    {
-                        name: '吉林',
-                        value: 19
-                    },
-                    {
-                        name: '福建',
-                        value: 54
-                    },
-                    {
-                        name: '贵州',
-                        value: 32
-                    },
-                    {
-                        name: '广东',
-                        value: 369
-                    },
-                    {
-                        name: '青海',
-                        value: 0
-                    },
-                    {
-                        name: '西藏',
-                        value: 0
-                    },
-                    {
-                        name: '四川',
-                        value: 185
-                    },
-                    {
-                        name: '宁夏',
-                        value: 4
-                    },
-                    {
-                        name: '海南',
-                        value: 20
-                    },
-                    {
-                        name: '台湾',
-                        value: 29
-                    },
-                    {
-                        name: '香港',
-                        value: 62
-                    },
-                    {
-                        name: '澳门',
-                        value: 2
-                    }
-                ],
+                currentData: [],
+                currentActive: 'confirmedCount', // currentConfirmed  confirmed  daysConfirmed
+                summaryInfo: {},
+                provinceName: ["新疆", "西藏", "青海", "甘肃", "宁夏", "云南", "贵州", "广西", "海南", "福建", "台湾", "上海", "陕西", "河南", "山西", "河北", "天津", "内蒙古", "辽宁", "吉林", "黑龙江", "山东", "北京", "江苏", "安徽", "浙江", "江西", "湖南", "广东", "重庆", "四川", "湖北", "香港", "澳门"]
             }
         },
+        watch: {
+            emergencyData(curval, oldval){
+                this.currentData = [{
+                    name: "南海诸岛",
+                    value: 0
+                }]
+                let newArray = this.getDataByType("confirmedCount");
+
+                this.currentData = this.currentData.concat(newArray)
+
+                this.initNcovMap()
+            }
+        },
+        computed: {
+            ...mapGetters([
+                "summaryData", "emergencyData"
+            ])
+        },
         mounted() {
-            this.initUpdateDate();
-            this.initNcovMap()
+            this.initUpdateDate()
+            setTimeout(()=>{
+                this.changeTab('confirmedCount');
+            }, 100);
+
         },
         methods: {
+            getDataByType(type){
+                return this.emergencyData.map((item, index) => {
+                    let name = this.provinceName[this.provinceName.indexOf(item.name.replace(/市/,"").replace(/省/,"").replace(/自治区/,"").replace(/回族/,"").replace(/维吾尔/,"").replace(/壮族/,""))]
+                    return {
+                        name: name,
+                        value: item.emergencyData[type] // confirmedCount 累积确诊
+                    }
+                })
+            },
+            changeTab(type){
+                this.currentActive = type
+
+                this.currentData = [{
+                    name: "南海诸岛",
+                    value: 0
+                }]
+                let newArray = this.getDataByType(type);
+
+                this.currentData = this.currentData.concat(newArray)
+
+                this.initNcovMap()
+            },
             initUpdateDate() {
                 let now = new Date();
                 this.updateDate = formatTimeToStr(now);
@@ -180,11 +128,11 @@
                     },
                     visualMap: {
                         calculable: true,
-                        showLabel:true,
+                        showLabel: true,
                         right: '15%',
-                        bottom:'20%',
+                        bottom: '20%',
                         show: true,
-                        type:'piecewise',
+                        type: 'piecewise',
                         text: ["确诊病例"],
                         pieces: [
                             {
@@ -253,7 +201,7 @@
                         name: "确诊病例",
                         type: "map",
                         geoIndex: 0,
-                        data: that.ncovData
+                        data: that.currentData
                     }]
                 })
             }
@@ -270,6 +218,49 @@
             color: #b7b7b7;
             padding: 5px 8px;
         }
+        .ncov-info-panel{
+            display: flex;
+            flex-direction: row;
+            .panel-item{
+                border: 1px solid #ebebeb;
+                padding: 5px;
+                border-radius: 4px;
+                margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                .float-data{
+                    font-size: 10px;
+                }
+                .main-count{
+                    font-size: 20px;
+                    font-weight: bolder;
+                }
+                .count-title{
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .button-group{
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin: 10px auto;
+            >div{
+                border: 1px solid #ebebeb;
+                padding: 5px;
+                border-radius: 4px;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            .active{
+                background-color: #10aeb5;
+                color: white;
+            }
+        }
+
         .map-canvas {
             width: 100%;
             height: 700px;

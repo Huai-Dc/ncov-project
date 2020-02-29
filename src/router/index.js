@@ -7,8 +7,7 @@ Vue.use(VueRouter)
 const constantRouterMap = [
     // {
     //     path: '*',
-    //     redirect: '/404',
-    //     component: () => import('@/views/system/404'),
+    //     redirect: '/dynamic',
     //     hidden: true,
     // },
     {
